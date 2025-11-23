@@ -1,17 +1,20 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import './index.css';
-import App from './App';
-import reportWebVitals from './reportWebVitals';
+import { createRoot } from 'react-dom/client';
 
-const root = ReactDOM.createRoot(document.getElementById('root'));
-root.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>
-);
+// Import statement to indicate that you need to bundle `./index.scss`
+import "./index.scss";
 
-// If you want to start measuring performance in your app, pass a function
-// to log results (for example: reportWebVitals(console.log))
-// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
-reportWebVitals();
+// Main component (will eventually use all the others)
+const MyFlixApplication = () => {
+  return (
+    <div className="my-flix">
+      <div>Good morning</div>
+    </div>
+  );
+};
+
+// Finds the root of your app
+const container = document.querySelector("#root");
+const root = createRoot(container);
+
+// Tells React to render your app in the root DOM element
+root.render(<MyFlixApplication />);
