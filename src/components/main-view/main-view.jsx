@@ -7,7 +7,7 @@ export const MainView = () => {
   const [selectedMovie, setSelectedMovie] = useState(null);
 
   useEffect(() => {
-    fetch("https://my-flix-movie-app-7538cfeb4d03.herokuapp.com/movies")
+    fetch("https://myflix-app-711-52fc8f24a6d2.herokuapp.com/movies")
       .then((response) => {
         if (!response.ok) {
           throw new Error(`HTTP error! status: ${response.status}`);
@@ -17,15 +17,18 @@ export const MainView = () => {
       .then((data) => {
         console.log("API Response:", data);
         const moviesFromApi = data.map((movie) => {
+          console.log("Movie data:", movie);
+          console.log("ImagePath:", movie.ImagePath);
           return {
             id: movie._id,
             title: movie.Title,
             description: movie.Description,
-            image: movie.ImagePath,
+            image: `https://myflix-app-711-52fc8f24a6d2.herokuapp.com/images/${movie.ImagePath}`,
             genre: movie.Genre.Name,
             director: movie.Director.Name
           };
         });
+        console.log("Processed movies:", moviesFromApi);
         setMovies(moviesFromApi);
       })
       .catch((error) => {

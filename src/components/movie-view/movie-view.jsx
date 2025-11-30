@@ -1,6 +1,8 @@
 import PropTypes from "prop-types";
 
 export const MovieView = ({ movie, onBackClick }) => {
+  console.log("MovieView received movie:", movie);
+  
   return (
     <div style={{ padding: '20px' }}>
       <div>

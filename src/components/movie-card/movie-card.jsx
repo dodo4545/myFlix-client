@@ -15,9 +15,6 @@ export const MovieCard = ({ movie, onMovieClick }) => {
         boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
         transition: 'all 0.3s ease',
         border: '1px solid #e0e0e0',
-        fontSize: '18px',
-        fontWeight: '600',
-        color: '#333',
         textAlign: 'center'
       }}
       onMouseEnter={(e) => {
@@ -29,7 +26,22 @@ export const MovieCard = ({ movie, onMovieClick }) => {
         e.currentTarget.style.boxShadow = '0 4px 6px rgba(0, 0, 0, 0.1)';
       }}
     >
-      {movie.title}
+      {movie.image && (
+        <img 
+          src={movie.image} 
+          alt={movie.title}
+          style={{
+            width: '100%',
+            maxWidth: '200px',
+            height: 'auto',
+            borderRadius: '8px',
+            marginBottom: '10px'
+          }}
+        />
+      )}
+      <div style={{ fontSize: '18px', fontWeight: '600', color: '#333' }}>
+        {movie.title}
+      </div>
     </div>
   );
 };
