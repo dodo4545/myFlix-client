@@ -8,8 +8,14 @@ export const MainView = () => {
 
   useEffect(() => {
     fetch("https://my-flix-movie-app-7538cfeb4d03.herokuapp.com/movies")
-      .then((response) => response.json())
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        return response.json();
+      })
       .then((data) => {
+        console.log("API Response:", data);
         const moviesFromApi = data.map((movie) => {
           return {
             id: movie._id,
@@ -21,6 +27,9 @@ export const MainView = () => {
           };
         });
         setMovies(moviesFromApi);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch movies:", error);
       });
   }, []);
 
