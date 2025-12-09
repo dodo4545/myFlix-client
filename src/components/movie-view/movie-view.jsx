@@ -1,13 +1,17 @@
 import PropTypes from "prop-types";
+import { useParams } from "react-router";
+import { Link } from "react-router-dom";
 import "../book-view/book-view.scss";
 
-export const MovieView = ({ movie, onBackClick }) => {
-  console.log("MovieView received movie:", movie);
-  
+export const MovieView = ({ movies }) => {
+  const { movieId } = useParams();
+
+  const movie = movies.find((m) => m.id === movieId);
+
   return (
     <div style={{ padding: '20px' }}>
       <div>
-        <img src={movie.image} alt={movie.title} style={{ maxWidth: '300px' }} />
+        <img className="w-100" src={movie.image} alt={movie.title} />
       </div>
       <div>
         <span>Title: </span>
@@ -25,25 +29,24 @@ export const MovieView = ({ movie, onBackClick }) => {
         <span>Director: </span>
         <span>{movie.director}</span>
       </div>
-      <button
-        onClick={onBackClick}
-        className="back-button"
-        style={{ cursor: "pointer" }}
-      >
-        Back
-      </button>
+      <Link to={`/`}>
+        <button className="back-button" style={{ cursor: "pointer" }}>
+          Back
+        </button>
+      </Link>
     </div>
   );
 };
 
 MovieView.propTypes = {
-  movie: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    title: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    image: PropTypes.string.isRequired,
-    genre: PropTypes.string.isRequired,
-    director: PropTypes.string.isRequired
-  }).isRequired,
-  onBackClick: PropTypes.func.isRequired
+  movies: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      description: PropTypes.string.isRequired,
+      image: PropTypes.string.isRequired,
+      genre: PropTypes.string.isRequired,
+      director: PropTypes.string.isRequired
+    })
+  ).isRequired
 };
