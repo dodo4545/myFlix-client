@@ -4,6 +4,7 @@ import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
 import { SignupView } from "../signup-view/signup-view";
 import { NavigationBar } from "../navigation-bar/navigation-bar";
+import { ProfileView } from "../profile-view/profile-view";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
@@ -62,6 +63,40 @@ export const MainView = () => {
       });
   }, [token]);
 
+  const handleAddFavorite = (movieId) => {
+    fetch(`https://myflix-app-711-52fc8f24a6d2.herokuapp.com/users/${user.Username}/movies/${movieId}`, {
+      method: "POST",
+      headers: { Authorization: `Bearer ${token}` }
+    })
+      .then((response) => {
+        if (response.ok) {
+          return response.json();
+        } else {
+          alert("Failed to add to favorites");
+          throw new Error("Failed to add to favorites");
+        }
+      })
+      .then((updatedUser) => {
+        alert("Added to favorites!");
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      })
+      .catch((error) => {
+        console.error("Error adding favorite:", error);
+      });
+  };
+
+  const handleUserUpdate = (updatedUser) => {
+    setUser(updatedUser);
+    localStorage.setItem("user", JSON.stringify(updatedUser));
+  };
+
+  const handleDeregister = () => {
+    setUser(null);
+    setToken(null);
+    localStorage.clear();
+  };
+
   return (
     <BrowserRouter>
       <NavigationBar
@@ -117,8 +152,31 @@ export const MainView = () => {
                   <Col>The list is empty!</Col>
                 ) : (
                   <Col md={8}>
-                    <MovieView movies={movies} />
+                    <MovieView
+                      movies={movies}
+                      user={user}
+                      token={token}
+                      onAddFavorite={handleAddFavorite}
+                    />
                   </Col>
+                )}
+              </>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <>
+                {!user ? (
+                  <Navigate to="/login" replace />
+                ) : (
+                  <ProfileView
+                    user={user}
+                    token={token}
+                    movies={movies}
+                    onUserUpdate={handleUserUpdate}
+                    onDeregister={handleDeregister}
+                  />
                 )}
               </>
             }
@@ -135,7 +193,12 @@ export const MainView = () => {
                   <>
                     {movies.map((movie) => (
                       <Col className="mb-5" key={movie.id} md={3}>
-                        <MovieCard movie={movie} />
+                        <MovieCard
+                          movie={movie}
+                          user={user}
+                          onAddFavorite={handleAddFavorite}
+                          isFavorite={user.FavoriteMovies && user.FavoriteMovies.includes(movie.id)}
+                        />
                       </Col>
                     ))}
                   </>

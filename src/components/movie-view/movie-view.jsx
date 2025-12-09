@@ -1,12 +1,18 @@
 import PropTypes from "prop-types";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
+import { Button } from "react-bootstrap";
 import "../book-view/book-view.scss";
 
-export const MovieView = ({ movies }) => {
+export const MovieView = ({ movies, user, token, onAddFavorite }) => {
   const { movieId } = useParams();
 
   const movie = movies.find((m) => m.id === movieId);
+  const isFavorite = user && user.FavoriteMovies && user.FavoriteMovies.includes(movieId);
+
+  const handleAddToFavorites = () => {
+    onAddFavorite(movie.id);
+  };
 
   return (
     <div style={{ padding: '20px' }}>
@@ -29,8 +35,20 @@ export const MovieView = ({ movies }) => {
         <span>Director: </span>
         <span>{movie.director}</span>
       </div>
+      
+      {user && (
+        <Button
+          variant={isFavorite ? "success" : "primary"}
+          onClick={handleAddToFavorites}
+          disabled={isFavorite}
+          className="me-2 mt-3"
+        >
+          {isFavorite ? "Already in Favorites" : "Add to Favorites"}
+        </Button>
+      )}
+
       <Link to={`/`}>
-        <button className="back-button" style={{ cursor: "pointer" }}>
+        <button className="back-button" style={{ cursor: "pointer", marginTop: '12px' }}>
           Back
         </button>
       </Link>
@@ -48,5 +66,8 @@ MovieView.propTypes = {
       genre: PropTypes.string.isRequired,
       director: PropTypes.string.isRequired
     })
-  ).isRequired
+  ).isRequired,
+  user: PropTypes.object,
+  token: PropTypes.string,
+  onAddFavorite: PropTypes.func
 };
