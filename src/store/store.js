@@ -9,4 +9,7 @@ const store = createStore(
   window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
 );
 
+// Log initial state (like the To-Do example)
+console.log('Initial Redux State:', store.getState());
+
 export default store;
