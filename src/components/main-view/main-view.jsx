@@ -1,4 +1,5 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { MovieCard } from "../movie-card/movie-card";
 import { MovieView } from "../movie-view/movie-view";
 import { LoginView } from "../login-view/login-view";
@@ -9,16 +10,18 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import Form from "react-bootstrap/Form";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { setMovies, setUser, logoutUser, setLoading, setAuthError, setFilter } from "../../actions/actions";
 
 export const MainView = () => {
-  const [movies, setMovies] = useState([]);
-  const [isLoadingMovies, setIsLoadingMovies] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [authError, setAuthError] = useState(false);
+  const dispatch = useDispatch();
   
-  // Start with clean state - no localStorage on initial load
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(null);
+  // Get state from Redux store
+  const movies = useSelector((state) => state.movies.list);
+  const user = useSelector((state) => state.user.user);
+  const token = useSelector((state) => state.user.token);
+  const isLoadingMovies = useSelector((state) => state.ui.isLoading);
+  const authError = useSelector((state) => state.ui.authError);
+  const searchQuery = useSelector((state) => state.ui.searchQuery);
 
   // Clear localStorage on mount to remove any stale tokens
   useEffect(() => {
@@ -31,7 +34,7 @@ export const MainView = () => {
     }
 
     console.log("Fetching movies with token:", token.substring(0, 20) + "...");
-    setIsLoadingMovies(true);
+    dispatch(setLoading(true));
 
     fetch("https://myflix-app-711-52fc8f24a6d2.herokuapp.com/movies", {
       headers: { Authorization: `Bearer ${token}` }
@@ -42,15 +45,15 @@ export const MainView = () => {
           if (response.status === 401) {
             // Token expired or invalid - show error but keep user logged in
             console.log("Token authentication failed - backend issue");
-            setAuthError(true);
-            setIsLoadingMovies(false);
+            dispatch(setAuthError(true));
+            dispatch(setLoading(false));
             return null;
           }
           console.error(`HTTP error! status: ${response.status}`);
-          setIsLoadingMovies(false);
+          dispatch(setLoading(false));
           return null;
         }
-        setAuthError(false);
+        dispatch(setAuthError(false));
         return response.json();
       })
       .then((data) => {
@@ -82,15 +85,15 @@ export const MainView = () => {
             director: movie.Director.Name
           };
         });
-        setMovies(moviesFromApi);
-        setIsLoadingMovies(false);
+        dispatch(setMovies(moviesFromApi));
+        dispatch(setLoading(false));
       })
       .catch((error) => {
         console.error("Failed to fetch movies:", error);
-        setIsLoadingMovies(false);
+        dispatch(setLoading(false));
         // Silently handle the error - user will see login screen if session expired
       });
-  }, [token]);
+  }, [token, dispatch]);
 
   const handleAddFavorite = (movieId) => {
     console.log("Attempting to add favorite:", {
@@ -124,7 +127,7 @@ export const MainView = () => {
       .then((updatedUser) => {
         console.log("Updated user:", updatedUser);
         alert("Added to favorites!");
-        setUser(updatedUser);
+        dispatch(setUser(updatedUser, token));
         localStorage.setItem("user", JSON.stringify(updatedUser));
       })
       .catch((error) => {
@@ -134,13 +137,12 @@ export const MainView = () => {
   };
 
   const handleUserUpdate = (updatedUser) => {
-    setUser(updatedUser);
+    dispatch(setUser(updatedUser, token));
     localStorage.setItem("user", JSON.stringify(updatedUser));
   };
 
   const handleDeregister = () => {
-    setUser(null);
-    setToken(null);
+    dispatch(logoutUser());
     localStorage.clear();
   };
 
@@ -149,8 +151,7 @@ export const MainView = () => {
       <NavigationBar
         user={user}
         onLoggedOut={() => {
-          setUser(null);
-          setToken(null);
+          dispatch(logoutUser());
           localStorage.clear();
         }}
       />
@@ -181,8 +182,7 @@ export const MainView = () => {
                     <LoginView
                       onLoggedIn={(user, token) => {
                         console.log("onLoggedIn called with token:", token.substring(0, 20) + "...");
-                        setUser(user);
-                        setToken(token);
+                        dispatch(setUser(user, token));
                         // Store in localStorage after state is set
                         localStorage.setItem("user", JSON.stringify(user));
                         localStorage.setItem("token", token);
@@ -286,7 +286,7 @@ export const MainView = () => {
                         type="text"
                         placeholder="Search movies by title, genre, or director..."
                         value={searchQuery}
-                        onChange={(e) => setSearchQuery(e.target.value)}
+                        onChange={(e) => dispatch(setFilter(e.target.value))}
                         className="mb-3"
                       />
                     </Col>

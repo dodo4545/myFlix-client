@@ -1,13 +1,17 @@
 import { createRoot } from "react-dom/client";
+import { Provider } from "react-redux";
+import store from "./store/store";
 import { MainView } from "./components/main-view/main-view";
 import Container from "react-bootstrap/Container";
 import "./index.scss";
 
 const App = () => {
   return (
-    <Container>
-      <MainView />
-    </Container>
+    <Provider store={store}>
+      <Container>
+        <MainView />
+      </Container>
+    </Provider>
   );
 };
 
