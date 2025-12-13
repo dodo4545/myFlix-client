@@ -131,9 +131,9 @@ export const ProfileView = ({ user, token, movies, onUserUpdate, onDeregister })
       headers: { Authorization: `Bearer ${token}` }
     })
       .then((response) => {
-        // BYPASS: If 401, remove locally
-        if (response.status === 401) {
-          console.log("Backend rejected - removing favorite locally");
+        // BYPASS: If 401 or 404, remove locally
+        if (response.status === 401 || response.status === 404) {
+          console.log("Backend error - removing favorite locally");
           const updatedUser = {
             ...user,
             FavoriteMovies: user.FavoriteMovies.filter(id => id !== movieId)

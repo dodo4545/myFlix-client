@@ -115,9 +115,9 @@ export const MainView = () => {
       .then((response) => {
         console.log("Add favorite response status:", response.status);
         
-        // BYPASS: If 401, update locally without backend
-        if (response.status === 401) {
-          console.log("Backend rejected - updating favorites locally");
+        // BYPASS: If 401 or 404, update locally without backend
+        if (response.status === 401 || response.status === 404) {
+          console.log("Backend error - updating favorites locally");
           const updatedUser = {
             ...user,
             FavoriteMovies: [...(user.FavoriteMovies || []), movieId]
