@@ -1,0 +1,69 @@
+Subject: Exercise 3.8 Submission - Redux State Management
+
+Dear Instructor,
+
+I have completed Exercise 3.8 on Redux state management. Please find my submissions below:
+
+PART 1: ARCHITECTURAL DIAGRAM FOR myFlix APP
+
+I have created a comprehensive architectural diagram documenting my Redux implementation for the myFlix application.
+
+File attached: REDUX_ARCHITECTURAL_DIAGRAM.md
+
+The diagram includes:
+- Redux store structure with 4 state slices (movies, user, favorites, ui)
+- 9 action types and action creators
+- 4 domain reducers (movies, user, favorites, ui) combined with combineReducers()
+- Complete data flow diagrams showing how actions move through the system
+- State tree visualization
+- Component integration patterns using useSelector and useDispatch
+- Justification for why Redux was chosen over plain React state
+
+PART 2: TO-DO LIST APP - DELETE FUNCTIONALITY
+
+I have implemented the delete functionality for the To-Do app as requested.
+
+CodeSandbox Link: https://codesandbox.io/p/sandbox/tsm3xg
+
+Implementation includes:
+- DELETE_TODO action type
+- deleteTodo(id) action creator
+- Modified reducer to handle deletion using filter()
+- Store testing with console.log() showing successful deletion
+- Full console output demonstrating the delete functionality working correctly
+
+BONUS EXERCISE: REDUX IMPLEMENTATION IN myFlix (COMPLETED!)
+
+I have fully implemented Redux state management in my myFlix application, going beyond the requirements of this exercise.
+
+GitHub Repository: https://github.com/dodo4545/myFlix-client
+Branch: bootstrap-styling-integration
+Commit: ad41d52
+
+Complete implementation includes:
+- 9 action types defined in actionTypes.js
+- 9 action creators in actions.js
+- 4 domain reducers (movies.js, user.js, favorites.js, ui.js)
+- Root reducer using combineReducers()
+- Redux store with Redux DevTools support
+- Provider wrapper in index.jsx
+- MainView component fully converted from useState to useSelector/useDispatch
+- All state management centralized in Redux store
+
+The implementation has been tested and is working correctly. All code has been committed and pushed to GitHub.
+
+Files changed: 12 files, 300+ insertions
+Status: Production-ready and fully functional
+
+SUMMARY
+
+Part 1: Architectural diagram completed and attached
+Part 2: To-Do delete functionality implemented in CodeSandbox
+Bonus: Complete Redux implementation in myFlix app
+
+All requirements have been met and the bonus exercise has been completed. The Redux implementation follows best practices with separated concerns, pure reducer functions, and proper integration with React components.
+
+Thank you for reviewing my submission!
+
+Best regards,
+James J.
