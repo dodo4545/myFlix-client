@@ -83,8 +83,8 @@ export const MainView = () => {
             title: movie.Title,
             description: movie.Description,
             image: posterMap[movie.Title] || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='450'%3E%3Crect fill='%23333' width='300' height='450'/%3E%3Ctext fill='%23fff' font-family='Arial' font-size='20' x='50%25' y='50%25' text-anchor='middle' dominant-baseline='middle'%3E${encodeURIComponent(movie.Title)}%3C/text%3E%3C/svg%3E`,
-            genre: movie.Genre.Name,
-            director: movie.Director.Name
+            genre: movie?.Genre?.Name || "N/A",
+            director: movie?.Director?.Name || "N/A"
           };
         });
         dispatch(setMovies(moviesFromApi));
